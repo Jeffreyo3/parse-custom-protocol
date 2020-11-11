@@ -95,3 +95,31 @@ class MainFrame:
                 elif r["recordType"] == self.recordTypes[0x01]:
                     balance -= r["amount"]
         return balance
+
+    def printAllRecords(self):
+        count = 0
+        for r in self.records:
+            if not count % 10:
+                self.printLabel()
+            count += 1
+            idLen = 20-len(str(r['userId']))
+            idPadding = " "*idLen
+            amountLen = 20
+            if r['amount'] is not None:
+                amountLen = 20-len(str(r['amount']))
+            amountPadding = " "*amountLen
+            if 'Start' in r['recordType']:
+                print(f"||  Start Autopay  ||  {r['timeStamp']}  ||  {r['userId']}{idPadding}  ||  {amountPadding}  ||")
+            elif 'End' in r['recordType']:
+                print(f"||  End Autopay    ||  {r['timeStamp']}  ||  {r['userId']}{idPadding}  ||  {amountPadding}  ||")
+            elif 'Debit' in r['recordType']:
+                print(f"||  {r['recordType']}          ||  {r['timeStamp']}  ||  {r['userId']}{idPadding}  ||  {r['amount']}{amountPadding}  ||")
+            elif 'Credit' in r['recordType']:
+                print(f"||  {r['recordType']}         ||  {r['timeStamp']}  ||  {r['userId']}{idPadding}  ||  {r['amount']}{amountPadding}  ||")
+        if count % 10:
+            print("||=================||==============||========================||========================||")    
+
+    def printLabel(self):
+        print("||=================||==============||========================||========================||")
+        print("|| Type            || Time Stamp   || User ID                || Amount                 ||")
+        print("||=================||==============||========================||========================||")
